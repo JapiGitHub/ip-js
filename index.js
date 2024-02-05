@@ -9,45 +9,27 @@ app.get('/', (req, res) => {
     const visitorIP = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
     const visitorInfo = { ip: visitorIP, agent: req.headers };
 
+    // Loop through all properties of the agent object and format them
+    let agentInfo = '';
+    for (const [key, value] of Object.entries(visitorInfo.agent)) {
+        agentInfo += `${key}: ${value}`; // Concatenate each key-value pair with a newline
+    }
+
     res.send(`
-        <link rel="stylesheet" href="index.css"> 
+        <link rel="stylesheet" href="index.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+        
         Hello there 
-        <pre>${JSON.stringify(visitorInfo, null, 2)}</pre>
+        <!--  human readable <pre>${JSON.stringify(visitorInfo, null, 2)}</pre> -->
+        <pre>  IP: ${visitorInfo.ip} Agent: ${agentInfo} </pre>
         <br>Is it OK if I call you ${visitorInfo.ip}? 
         <br>If you play nice, you will get a cookie.
 
         <div id="textContainer">
 
         </div>
-        <script>
-        console.log("hello worlrlrlrrlrl")
-        const texts = [
-            { text: "lorem ipsim", delay: 2 },
-            { text: "endidididid", delay: 5 },
-            { text: "yeyeeyeyey\neueueueueu\neueueueue", delay: 2000 } // Adjusted for demonstration
-        ];
-
-        
-        function displayText(index) {
-            const container = document.getElementById('textContainer');
-            if (index < texts.length) {
-                // Adds text to the container
-                let paragraph = document.createElement('p');
-                paragraph.textContent = texts[index].text;
-                container.appendChild(paragraph);
-                console.log(texts[index].text);
-                // Wait for 'delay' milliseconds before displaying the next text
-                setTimeout(() => {
-                    displayText(index + 1);
-                }, texts[index].delay);
-            }
-        }
-
-        // Start displaying texts from the first item
-        document.addEventListener('DOMContentLoaded', function() {
-            displayText(0);
-        });
-    </script>dfddfdfdfdfd
     `);
 });
 
